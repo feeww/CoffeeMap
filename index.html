@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <title>CoffeeMap</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="header">
+    <div class="logo">
+      <img src="img/logo-cup.png"  class="cup">
+      <img src="img/logo-text.png"  class="text-logo">
+    </div>
+    <input type="text" class="search" placeholder="Пошук по назві чи адресі...">
+    <div class="lang-user">
+      <select class="lang-select">
+        <option value="uk">UKR</option>
+        <option value="en">ENG</option>
+      </select>
+      <div class="user-icon">👤</div>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="sidebar">
+      <div class="controls">
+        <select class="sort-select">
+          <option>Спочатку найближчі</option>
+          <option>Усі кав'ярні</option>
+        </select>
+        <button class="filter-btn">Фільтри ▾</button>
+      </div>
+
+      <div class="coffee-list">
+        <div class="coffee-item selected">
+          <div class="coffee-info">
+            <h3>coffee' S</h3>
+            <p>Вул. Солом'янська 8</p>
+            <p class="rating">⭐ 4.7 (123)</p>
+          </div>
+          <div class="distance">270 м</div>
+        </div>
+
+        <div class="coffee-item">
+          <h3>Кав'ярня 2</h3>
+          <p>Вул...</p>
+        </div>
+
+        <div class="coffee-item">
+          <h3>Кав'ярня 3</h3>
+          <p>Вул...</p>
+        </div>
+
+        <div class="coffee-item">
+          <h3>Кав'ярня 4</h3>
+          <p>Вул...</p>
+        </div>
+      </div>
+    </div>
+    <div class="map">
+  
+      <div class="map-placeholder">Тут буде карта</div>
+    </div>
+  </div>
+</body>
+</html>
