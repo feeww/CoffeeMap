@@ -156,7 +156,7 @@ export function renderCoffeeList(places) {
     container.innerHTML = places.map(place => `
         <div class="card ${place.id === state.selectedPlaceId ? 'active' : ''}" 
              id="place-${place.id}" 
-             onclick="window.selectPlace(${place.id})">
+             data-place-id="${place.id}">
             
             <div class="card-left">
                 <h3>${place.name}</h3>
@@ -169,6 +169,13 @@ export function renderCoffeeList(places) {
             </div>
         </div>
     `).join('');
+
+    container.querySelectorAll('.card').forEach(card => {
+        card.addEventListener('click', () => {
+            const placeId = parseInt(card.dataset.placeId, 10);
+            window.selectPlace(placeId);
+        });
+    });
 }
 
 function updateResultsCount(count) {
