@@ -7,14 +7,27 @@ export async function loadPlacesForCurrentBounds(force = false) {
     if (state.isLoading || !state.map) return;
 
     const bounds = state.map.getBounds();
-    const boundsKey = `${bounds.getSouth().toFixed(3)},${bounds.getWest().toFixed(3)},${bounds.getNorth().toFixed(3)},${bounds.getEast().toFixed(3)}`;
-
-    // if (!force && boundsKey === state.lastBounds) return; // Removed aggressive bounds caching
-    // state.lastBounds = boundsKey; // No longer needed without bounds caching
-
     state.setLoading(true);
 
-    const url = `${CONFIG.apiBase}/places?south=${bounds.getSouth()}&west=${bounds.getWest()}&north=${bounds.getNorth()}&east=${bounds.getEast()}`;
+    const south = bounds.getSouth();
+    const west = bounds.getWest();
+    const north = bounds.getNorth();
+    const east = bounds.getEast();
+
+    const query = `
+        [out:json];
+        (
+          node["amenity"="cafe"](${south},${west},${north},${east});
+          way["amenity"="cafe"](${south},${west},${north},${east});
+          relation["amenity"="cafe"](${south},${west},${north},${east});
+          node["cuisine"="coffee_shop"](${south},${west},${north},${east});
+          way["cuisine"="coffee_shop"](${south},${west},${north},${east});
+          node["shop"="coffee"](${south},${west},${north},${east});
+          way["shop"="coffee"](${south},${west},${north},${east});
+        );
+        out center;
+    `;
+    const url = "https://overpass-api.de/api/interpreter?data=" + encodeURIComponent(query);
 
     fetch(url)
         .then(response => response.json())
@@ -30,7 +43,11 @@ export async function loadPlacesForCurrentBounds(force = false) {
                 state.setPlaces(places);
             }
         })
-        .catch(error => console.error('Error loading places:', error))
+        .catch(error => {
+            console.error('Error loading places from Overpass:', error);
+            // In case of error, set places to an empty array to clear the list
+            state.setPlaces([]);
+        })
         .finally(() => state.setLoading(false));
 }
 
@@ -38,9 +55,8 @@ export async function searchNominatim(query) {
     if (query.length < 3) return [];
 
     try {
-        const response = await fetch(
-            `${CONFIG.apiBase}/search?q=${encodeURIComponent(query)}`
-        );
+        const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=5&addressdetails=1`;
+        const response = await fetch(url);
         if (!response.ok) {
             console.warn('Search response not ok:', response.status);
             return [];

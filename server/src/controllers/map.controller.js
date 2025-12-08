@@ -23,7 +23,7 @@ export async function searchLocation(req, res, next) {
         const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(q)}&limit=5&addressdetails=1`;
         const response = await fetch(url, {
             headers: {
-                'User-Agent': 'CoffeeMap/1.0 (https://github.com/your-repo)'
+                'User-Agent': 'CoffeeMap/1.0 (https://github.com/feeww/CoffeeMap)'
             }
         });
         const data = await response.json();
