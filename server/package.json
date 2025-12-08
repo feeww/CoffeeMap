@@ -1,0 +1,23 @@
+{
+    "name": "coffeemap-server",
+    "version": "1.0.0",
+    "description": "CoffeeMap backend API server",
+    "type": "module",
+    "main": "src/index.js",
+    "scripts": {
+        "start": "node src/index.js",
+        "dev": "node --watch src/index.js"
+    },
+    "keywords": [
+        "coffee",
+        "maps",
+        "api"
+    ],
+    "author": "",
+    "license": "MIT",
+    "dependencies": {
+        "cors": "^2.8.5",
+        "express": "^4.18.2",
+        "node-fetch": "^3.3.2"
+    }
+}

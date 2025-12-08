@@ -1,66 +1,94 @@
 <!DOCTYPE html>
 <html lang="uk">
+
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>CoffeeMap</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <meta name="description" content="Знайди найкращі кав'ярні поруч">
+  <meta name="theme-color" content="#B09B89">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+
   <link rel="stylesheet" href="styles/style.css">
 </head>
+
 <body>
-  <div class="header">
-    <div class="logo">
-      <img src="img/logo-cup.png"  class="cup">
-      <img src="img/logo-text.png"  class="text-logo">
+  <div class="app-container">
+    <header class="header">
+      <div class="logo">
+        <span class="logo-icon">☕</span>
+        <span class="logo-text">CoffeeMap</span>
+      </div>
+
+      <div class="search-container">
+        <input type="text" class="search-input" id="searchInput" placeholder="Пошук по назві чи адресі...">
+        <div class="search-suggestions"></div>
+      </div>
+
+      <div class="header-controls">
+        <!-- Mobile Search Button (visible only on mobile via CSS) -->
+        <div class="mobile-search-btn" id="mobileSearchBtn" title="Пошук">
+          🔍
+        </div>
+        <div class="control-btn" id="langToggle" title="Змінити мову">
+          <!-- Flag and text will be managed by JS -->
+          <span>UKR</span>
+        </div>
+        <div class="control-btn" id="themeToggle" title="Тема">
+          ☀️
+        </div>
+      </div>
+    </header>
+
+    <!-- Mobile Search Modal -->
+    <div class="search-modal" id="searchModal">
+      <button class="search-modal-close" id="searchModalClose">✕</button>
+      <div class="search-modal-content">
+        <input type="text" class="search-modal-input" id="mobileSearchInput" placeholder="Введіть назву або адресу...">
+        <div class="search-suggestions" id="mobileSearchSuggestions"></div>
+      </div>
     </div>
-    <input type="text" class="search" placeholder="Пошук по назві чи адресі...">
-    <div class="lang-user">
-      <select class="lang-select">
-        <option value="uk">UKR</option>
-        <option value="en">ENG</option>
-      </select>
-      <div class="user-icon">👤</div>
+
+    <main class="main-layout">
+      <aside class="sidebar">
+        <div class="filters-row">
+          <button class="filter-btn" id="locateBtnSidebar">
+            📍 Знайти мене
+          </button>
+
+          <label class="filter-toggle-label">
+            <input type="checkbox" id="showUnknownToggle">
+            <span id="labelUnknown">Без адреси</span>
+          </label>
+        </div>
+
+        <div id="resultsCount" class="results-count">Завантаження...</div>
+
+        <div class="coffee-list" id="coffeeList">
+        </div>
+      </aside>
+
+      <div class="map-wrapper">
+        <div id="map"></div>
+        <div class="map-crosshair"></div>
+      </div>
+    </main>
+
+    <!-- Loading Overlay (outside map-wrapper for proper z-index on mobile) -->
+    <div id="loadingOverlay" class="loading-overlay">
+      <div class="spinner"></div>
     </div>
   </div>
 
-  <div class="main">
-    <div class="sidebar">
-      <div class="controls">
-        <select class="sort-select">
-          <option>Спочатку найближчі</option>
-          <option>Усі кав'ярні</option>
-        </select>
-        <button class="filter-btn">Фільтри ▾</button>
-      </div>
-
-      <div class="coffee-list">
-        <div class="coffee-item selected">
-          <div class="coffee-info">
-            <h3>coffee' S</h3>
-            <p>Вул. Солом'янська 8</p>
-            <p class="rating">⭐ 4.7 (123)</p>
-          </div>
-          <div class="distance">270 м</div>
-        </div>
-
-        <div class="coffee-item">
-          <h3>Кав'ярня 2</h3>
-          <p>Вул...</p>
-        </div>
-
-        <div class="coffee-item">
-          <h3>Кав'ярня 3</h3>
-          <p>Вул...</p>
-        </div>
-
-        <div class="coffee-item">
-          <h3>Кав'ярня 4</h3>
-          <p>Вул...</p>
-        </div>
-      </div>
-    </div>
-    <div class="map">
-  
-      <div class="map-placeholder">Тут буде карта</div>
-    </div>
-  </div>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script type="module" src="js/app.js"></script>
 </body>
+
 </html>
