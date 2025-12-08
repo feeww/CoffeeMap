@@ -2,12 +2,13 @@ name: CI/CD
 
 on:
   push:
-    branches: [ "**" ]
+    branches: [ "main" ]
   pull_request:
 
 permissions:
   contents: read
-  deployments: write
+  pages: write
+  id-token: write
 
 env:
   NODE_VERSION: '20.x'
@@ -48,61 +49,28 @@ jobs:
           name: junit-report
           path: report.xml
 
-  build:
-    name: Build
+  deploy-pages:
+    name: Deploy to GitHub Pages
     runs-on: ubuntu-latest
     needs: [test]
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-
-      - name: Restore npm cache
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.npm
-            node_modules
-          key: npm-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            npm-${{ runner.os }}-
-
-      - name: Install deps
-        run: npm ci
-
-      - name: Build project
-        run: npm run build 
-      
-      - name: Upload build artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: app-build
-          path: dist
-
-  deploy:
-    name: Deploy (staging)
-    runs-on: ubuntu-latest
-    needs: [build]
     if: github.ref == 'refs/heads/main'
     
     environment:
-      name: staging
-      url: https://staging.coffeemap.example.com
-    
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
     steps:
-      - name: Download build artifact
-        uses: actions/download-artifact@v4
+      - name: Checkout
+        uses: actions/checkout@v4
+        
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+        
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          name: app-build
-          path: ./artifact
-      
-      - name: Simulate deploy
-        env:
-          DEPLOY_TOKEN: ${{ secrets.DEPLOY_TOKEN }} 
-        run: |
-          echo "Deploying to ${{ github.environment }}..."
-          echo "Token: ${DEPLOY_TOKEN:0:4}****"
-          ls -la ./artifact
-          echo "Deploy success"
+          path: './client'
+          
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
